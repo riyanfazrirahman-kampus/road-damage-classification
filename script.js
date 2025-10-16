@@ -2,18 +2,19 @@
 const uploadArea = document.getElementById("uploadArea");
 const imageUpload = document.getElementById("imageUpload");
 const imagePreview = document.getElementById("imagePreview");
-const predictButton = document.getElementById("predictButton");
 const loader = document.getElementById("loader");
 const resultContainer = document.getElementById("resultContainer");
 const resultsList = document.getElementById("resultsList");
 const errorMessageDiv = document.getElementById("errorMessage");
 
 // --- EVENT LISTENER ---
+// Klik area upload untuk membuka file explorer
 uploadArea.addEventListener("click", () => imageUpload.click());
-imageUpload.addEventListener("change", handleImageSelect);
-predictButton.addEventListener("click", handlePredict);
 
-// Drag and Drop Events
+// Saat gambar dipilih, langsung proses
+imageUpload.addEventListener("change", handleImageSelect);
+
+// --- DRAG & DROP EVENT ---
 uploadArea.addEventListener("dragover", (event) => {
   event.preventDefault();
   uploadArea.classList.add("dragover");
@@ -34,6 +35,7 @@ uploadArea.addEventListener("drop", (event) => {
 
 // --- FUNGSI-FUNGSI ---
 
+// 🔹 Ketika gambar dipilih atau di-drop
 function handleImageSelect(event) {
   const file = event.target.files[0];
   if (file) {
@@ -41,15 +43,20 @@ function handleImageSelect(event) {
     reader.onload = (e) => {
       imagePreview.src = e.target.result;
       imagePreview.style.display = "block";
-      predictButton.disabled = false;
       resetUI();
+
+      // 🔸 Langsung prediksi otomatis
+      handlePredict(file);
     };
     reader.readAsDataURL(file);
   }
 }
 
-async function handlePredict() {
-  const file = imageUpload.files[0];
+// 🔹 Kirim gambar ke backend API untuk diprediksi
+async function handlePredict(file) {
+  if (!file) {
+    file = imageUpload.files[0];
+  }
   if (!file) {
     showError("Silakan pilih gambar terlebih dahulu.");
     return;
@@ -86,22 +93,18 @@ async function handlePredict() {
   }
 }
 
+// 🔹 Tampilkan hasil prediksi
 function displayResult(data) {
-  // Kosongkan hasil sebelumnya
   resultsList.innerHTML = "";
 
-  // Loop melalui prediksi dan buat elemen li
-  // ... di dalam fungsi displayResult
   data.predictions.forEach((pred) => {
     const li = document.createElement("li");
-
-    // Langsung gunakan nilai confidence dari backend dan tambahkan '%'
     const confidenceText = `${pred.confidence}%`;
 
     li.innerHTML = `
-                    <span>${pred.class}</span>
-                    <span>${confidenceText}</span>
-                `;
+      <span>${pred.class}</span>
+      <span>${confidenceText}</span>
+    `;
 
     resultsList.appendChild(li);
   });
@@ -110,14 +113,15 @@ function displayResult(data) {
   errorMessageDiv.style.display = "none";
 }
 
+// 🔹 Tampilkan pesan error
 function showError(message) {
   errorMessageDiv.textContent = message;
   errorMessageDiv.style.display = "block";
   resultContainer.style.display = "none";
 }
 
+// 🔹 Ubah tampilan saat loading
 function setLoadingState(isLoading) {
-  predictButton.disabled = isLoading;
   loader.style.display = isLoading ? "block" : "none";
   if (isLoading) {
     resultContainer.style.display = "none";
@@ -125,6 +129,7 @@ function setLoadingState(isLoading) {
   }
 }
 
+// 🔹 Reset tampilan hasil/error
 function resetUI() {
   resultContainer.style.display = "none";
   errorMessageDiv.style.display = "none";
