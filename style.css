@@ -1,0 +1,184 @@
+     /* --- Gaya Umum --- */
+     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+     :root {
+         --primary-color: #007bff;
+         --primary-hover: #0056b3;
+         --success-color: #28a745;
+         --danger-color: #dc3545;
+         --light-bg: #f4f7f6;
+         --card-bg: #ffffff;
+         --text-color: #333;
+         --border-color: #ddd;
+     }
+
+     body {
+         font-family: 'Poppins', sans-serif;
+         background-color: var(--light-bg);
+         color: var(--text-color);
+         margin: 0;
+         padding: 20px;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         min-height: 100vh;
+     }
+
+     .container {
+         background-color: var(--card-bg);
+         padding: 30px;
+         border-radius: 12px;
+         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+         width: 100%;
+         max-width: 500px;
+         text-align: center;
+     }
+
+     h1 {
+         color: var(--primary-color);
+         margin-bottom: 20px;
+     }
+
+     /* --- Area Upload Gambar --- */
+     .upload-area {
+         border: 2px dashed var(--border-color);
+         border-radius: 8px;
+         padding: 40px 20px;
+         margin: 20px 0;
+         cursor: pointer;
+         transition: all 0.3s ease;
+         position: relative;
+     }
+
+     .upload-area:hover,
+     .upload-area.dragover {
+         border-color: var(--primary-color);
+         background-color: #f0f8ff;
+     }
+
+     .upload-area p {
+         margin: 0;
+         color: #888;
+     }
+
+     #imageUpload {
+         display: none;
+     }
+
+     #imagePreview {
+         max-width: 100%;
+         max-height: 300px;
+         margin-top: 20px;
+         border-radius: 8px;
+         display: none;
+     }
+
+     /* --- Tombol dan Hasil --- */
+     #predictButton {
+         background-color: var(--primary-color);
+         color: white;
+         border: none;
+         padding: 12px 25px;
+         font-size: 16px;
+         font-weight: 600;
+         border-radius: 6px;
+         cursor: pointer;
+         transition: background-color 0.3s ease;
+         width: 100%;
+         margin-top: 15px;
+     }
+
+     #predictButton:hover {
+         background-color: var(--primary-hover);
+     }
+
+     #predictButton:disabled {
+         background-color: #ccc;
+         cursor: not-allowed;
+     }
+
+     /* --- Loading, Hasil, dan Error --- */
+     .loader {
+         border: 4px solid #f3f3f3;
+         border-top: 4px solid var(--primary-color);
+         border-radius: 50%;
+         width: 40px;
+         height: 40px;
+         animation: spin 1s linear infinite;
+         margin: 20px auto;
+         display: none;
+     }
+
+     @keyframes spin {
+         0% {
+             transform: rotate(0deg);
+         }
+
+         100% {
+             transform: rotate(360deg);
+         }
+     }
+
+     #resultContainer {
+         margin-top: 20px;
+         padding: 20px;
+         background-color: #e9f7ef;
+         border: 1px solid var(--success-color);
+         border-radius: 8px;
+         display: none;
+         text-align: left;
+     }
+
+     #resultContainer h2 {
+         color: var(--success-color);
+         margin-top: 0;
+         text-align: center;
+     }
+
+     /* Gaya untuk daftar hasil */
+     #resultsList {
+         list-style-type: none;
+         padding: 0;
+         margin: 0;
+     }
+
+     #resultsList li {
+         background-color: #fff;
+         padding: 10px 15px;
+         border-radius: 5px;
+         margin-bottom: 8px;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         font-size: 16px;
+     }
+
+     #resultsList li:first-child {
+         font-weight: 600;
+         border: 1px solid var(--success-color);
+     }
+
+     .confidence-bar {
+         background-color: #e9ecef;
+         border-radius: 10px;
+         overflow: hidden;
+         height: 8px;
+         width: 100px;
+     }
+
+     .confidence-fill {
+         background-color: var(--success-color);
+         height: 100%;
+         transition: width 0.3s ease;
+     }
+
+
+     #errorMessage {
+         margin-top: 20px;
+         padding: 15px;
+         background-color: #f8d7da;
+         color: var(--danger-color);
+         border: 1px solid #f5c6cb;
+         border-radius: 8px;
+         display: none;
+     }

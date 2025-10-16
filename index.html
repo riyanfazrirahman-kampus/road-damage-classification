@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Damage Detection</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Road Damage Detection</h1>
+            <p>Unggah gambar untuk mendeteksi jenis kerusakan jalan.</p>
+        </header>
+
+        <main>
+            <div class="upload-area" id="uploadArea">
+                <p>Klik atau seret dan lepas gambar di sini</p>
+                <input type="file" id="imageUpload" accept="image/*">
+                <img id="imagePreview" alt="Pratinjau Gambar">
+            </div>
+
+            <button id="predictButton" disabled>Prediksi Kerusakan</button>
+
+            <div class="loader" id="loader"></div>
+
+            <section id="resultContainer">
+                <h2>Hasil Prediksi</h2>
+                <ul id="resultsList">
+                    <!-- Hasil akan diinjek di sini oleh JavaScript -->
+                </ul>
+            </section>
+
+            <div id="errorMessage"></div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
