@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.BASE_API_URL;
+
 // --- ELEMEN DOM ---
 const uploadArea = document.getElementById("uploadArea");
 const imageUpload = document.getElementById("imageUpload");
@@ -61,7 +63,7 @@ async function handlePredict() {
   setLoadingState(true);
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/predict", {
+    const response = await fetch(`${API_URL}/predict`, {
       method: "POST",
       body: formData,
     });
