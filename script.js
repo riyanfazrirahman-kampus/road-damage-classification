@@ -7,6 +7,13 @@ const resultContainer = document.getElementById("resultContainer");
 const resultsList = document.getElementById("resultsList");
 const errorMessageDiv = document.getElementById("errorMessage");
 
+// --- KONFIGURASI BASE URL ---
+const BASE_URL =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "localhost"
+    ? "http://localhost:10000"
+    : "https://road-damage-api.onrender.com";
+
 // --- EVENT LISTENER ---
 // Klik area upload untuk membuka file explorer
 uploadArea.addEventListener("click", () => imageUpload.click());
@@ -68,13 +75,10 @@ async function handlePredict(file) {
   setLoadingState(true);
 
   try {
-    const response = await fetch(
-      `https://road-damage-api.onrender.com/predict`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const response = await fetch(`${BASE_URL}/predict`, {
+      method: "POST",
+      body: formData,
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
