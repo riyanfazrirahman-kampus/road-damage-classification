@@ -92,7 +92,7 @@ async function handlePredict(file) {
     const data = await response.json();
     displayResult(data);
   } catch (error) {
-    console.error("Prediction Error:", error);
+    console.error("Klasifikasi Error:", error);
     showError(`Gagal mendapatkan prediksi: ${error.message}`);
   } finally {
     setLoadingState(false);
