@@ -1,5 +1,6 @@
 // --- ELEMEN DOM ---
 const uploadArea = document.getElementById("uploadArea");
+const placeholderUpload = document.getElementById("placeholderUpload");
 const imageUpload = document.getElementById("imageUpload");
 const imagePreview = document.getElementById("imagePreview");
 const loader = document.getElementById("loader");
@@ -50,6 +51,7 @@ function handleImageSelect(event) {
     reader.onload = (e) => {
       imagePreview.src = e.target.result;
       imagePreview.style.display = "block";
+      placeholderUpload.style.display = "none";
       resetUI();
 
       // 🔸 Langsung prediksi otomatis
