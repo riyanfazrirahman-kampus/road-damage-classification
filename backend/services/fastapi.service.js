@@ -1,3 +1,4 @@
+require("dotenv").config();
 const axios = require("axios");
 const FormData = require("form-data");
 const FASTAPI_PORT = process.env.FASTAPI_PORT
@@ -13,7 +14,7 @@ async function sendToFastAPI({ file, model_name }) {
 
     formData.append("model_name", model_name);
 
-    const response = await axios.post(`${FASTAPI_URL}/predict`, formData, {
+    const response = await axios.post(`${FASTAPI_URL}predict`, formData, {
         headers: formData.getHeaders(),
         timeout: 30000,
     });
@@ -22,7 +23,7 @@ async function sendToFastAPI({ file, model_name }) {
 }
 
 async function getModelsAvailable() {
-    const response = await axios.get(`${FASTAPI_URL}/`, {
+    const response = await axios.get(`${FASTAPI_URL}`, {
         timeout: 30000,
     });
 
