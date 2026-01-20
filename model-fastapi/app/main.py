@@ -93,6 +93,10 @@ def preprocess_image(image_bytes: bytes) -> np.ndarray:
 # ROUTES
 @app.get("/")
 def root():
+    return {"status": "ok"}
+
+@app.get("/models")
+def root():
     return {
         "available_models": list(MODEL_STORE.keys())
     }

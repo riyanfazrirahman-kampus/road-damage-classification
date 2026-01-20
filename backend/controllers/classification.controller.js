@@ -1,4 +1,4 @@
-const { sendToFastAPI, getModelsAvailable } = require("../services/fastapi.service");
+const { sendToFastAPI, getModelsAvailable, getStatusModel } = require("../services/fastapi.service");
 
 async function predictImage(req, res) {
     try {
@@ -50,4 +50,22 @@ async function getModels(req, res) {
     }
 }
 
-module.exports = { predictImage, getModels };
+async function getStatus(req, res) {
+    try {
+        const result = await getStatusModel();
+
+        return res.json({
+            result,
+        });
+    } catch (error) {
+        console.error(error.message);
+
+        if (error.response) {
+            return res.status(error.response.status).json(error.response.data);
+        }
+
+        res.status(500).json({ error: "Server Models Die." });
+    }
+}
+
+module.exports = { predictImage, getModels, getStatus };
