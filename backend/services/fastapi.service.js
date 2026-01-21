@@ -9,7 +9,7 @@ async function getStatusModel() {
     for (let i = 0; i < 3; i++) {
         try {
             const res = await axios.get(FASTAPI_URL, { timeout: 60000 });
-            return res;
+            return res.data;
         } catch (err) {
             console.log("Retry:", i + 1);
             await new Promise(r => setTimeout(r, 2000));
@@ -23,7 +23,7 @@ async function getModelsAvailable() {
         timeout: 30000,
     });
 
-    return response.available_models;
+    return response.data;
 }
 
 async function sendToFastAPI({ file, model_name }) {
