@@ -1,11 +1,17 @@
 const router = require("express").Router();
 const upload = require("../middlewares/upload.middleware");
-const { predictImage, getModels, getStatus, getHistory, saveClassification } = require("../controllers/classification.controller");
+const classificationController = require("../controllers/classification.controller");
+const cloudinaryUpload = require("../middlewares/upload.cloudinary.middleware");
 
-router.get("/", getStatus);
-router.get("/models", getModels);
-router.get("/history", getHistory);
-router.post("/predict", upload.single("file"), predictImage);
-router.post("/save-predict", upload.single("file"), saveClassification);
+router.get("/", classificationController.getStatus);
+router.get("/models", classificationController.getModels);
+router.get("/history", classificationController.getHistory);
+
+router.post("/predict", upload.single("file"), classificationController.predictImage);
+router.post("/save-predict",
+    upload.single("file"),
+    cloudinaryUpload({ folder: "classifications" }),
+    classificationController.saveClassification
+);
 
 module.exports = router;

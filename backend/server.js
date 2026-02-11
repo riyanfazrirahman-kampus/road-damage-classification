@@ -8,9 +8,11 @@ app.use(cors());
 app.use(express.json());
 
 // Import routes
+const testApi = require("./routes/test.route");
 const classificationRoute = require("./routes/classification.route");
 
 // Routes
+app.use("/api/test", testApi);
 app.use("/api/classification", classificationRoute);
 
 // Root endpoint

@@ -19,7 +19,7 @@ async function getStatusModel() {
 }
 
 async function getModelsAvailable() {
-    const response = await axios.get(FASTAPI_URL + `models`, {
+    const response = await axios.get(FASTAPI_URL + `/models`, {
         timeout: 30000,
     });
 
@@ -36,7 +36,7 @@ async function sendToFastAPI({ file, model_name }) {
 
     formData.append("model_name", model_name);
 
-    const response = await axios.post(FASTAPI_URL + `predict`, formData, {
+    const response = await axios.post(FASTAPI_URL + `/predict`, formData, {
         headers: formData.getHeaders(),
         timeout: 30000,
     });

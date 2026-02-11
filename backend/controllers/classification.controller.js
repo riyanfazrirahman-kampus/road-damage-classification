@@ -1,4 +1,5 @@
 const db = require("../config/firebase");
+const cloudinary = require("../config/cloudinary");
 const { sendToFastAPI, getModelsAvailable, getStatusModel } = require("../services/fastapi.service");
 
 
@@ -35,69 +36,91 @@ async function predictImage(req, res) {
     }
 }
 
-
 async function saveClassification(req, res) {
     try {
-        // 1. Ambil data dari hasil klasifikasi
-        const file = req.file;
+        const { model, predictions, location } = req.body;
+        const uploadResult = req.cloudinary;
 
-        const {
-            model,
-            predictions,
-            location
-        } = req.body;
-
-        if (!file) {
-            return res.status(400).json({ error: "File image wajib" });
+        if (!uploadResult) {
+            return res.status(400).json({
+                status: "fail",
+                step: "upload",
+                error: "Upload image ke Cloudinary gagal"
+            });
         }
 
         if (!model || !predictions) {
             return res.status(400).json({
+                status: "fail",
+                step: "validation",
                 error: "Data tidak lengkap"
             });
         }
 
-        // 2. upload ke Firebase Storage
-        const fileName = `images/${Date.now()}-${file.originalname}`;
+        let parsedPredictions;
+        try {
+            parsedPredictions =
+                typeof predictions === "string"
+                    ? JSON.parse(predictions)
+                    : predictions;
+        } catch (err) {
+            return res.status(400).json({
+                status: "fail",
+                step: "parse_predictions",
+                error: "Format predictions harus JSON valid"
+            });
+        }
 
-        const fileUpload = bucket.file(fileName);
-        await fileUpload.save(compressedBuffer, {
-            contentType: "image/jpeg"
-        });
-
-        const imageUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
-
-        // 3. Simpan ke Firestore
+        // Payload
         const payload = {
-            imageUrl,
+            image: {
+                url: uploadResult.secure_url,
+                public_id: uploadResult.public_id,
+                bytes: uploadResult.bytes,
+                format: uploadResult.format
+            },
             model,
-            predictions,
+            predictions: parsedPredictions,
             location,
-            created_at: admin.firestore.FieldValue.serverTimestamp(),
-            updated_at: admin.firestore.FieldValue.serverTimestamp()
+            created_at: new Date(),
+            updated_at: new Date()
         };
 
-        const docRef = await db
-            .collection("classifications")
-            .add(payload);
+        let docRef;
+        try {
+            docRef = await db.collection("classifications").add(payload);
+        } catch (dbError) {
+            console.error("Firestore error:", dbError);
 
-        // 3. Response ke client
+            return res.status(500).json({
+                status: "fail",
+                step: "database",
+                error: "Gagal menyimpan ke Firestore",
+                detail: dbError.message
+            });
+        }
+
+        // Success
         res.json({
             status: "success",
-            message: "Berhasil klasifikasi & simpan data",
+            message: "Data klasifikasi berhasil disimpan",
             id: docRef.id,
             data: payload
         });
 
     } catch (error) {
-        console.error(error);
+        console.error("Unexpected error:", error);
 
         res.status(500).json({
             status: "fail",
-            error: "Gagal memproses klasifikasi"
+            step: "unknown",
+            error: "Terjadi kesalahan tidak terduga",
+            detail: error.message
         });
     }
 }
+
+
 
 async function getModels(req, res) {
     try {
