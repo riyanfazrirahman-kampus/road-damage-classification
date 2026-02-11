@@ -54,8 +54,16 @@ import { ReactComponent as ChatIcon } from "./chat.svg?react";
 import { ReactComponent as MoreDotIcon } from "./moredot.svg?react";
 import { ReactComponent as AlertHexaIcon } from "./alert-hexa.svg?react";
 import { ReactComponent as ErrorHexaIcon } from "./info-hexa.svg?react";
+import { ReactComponent as HomeIcon } from "./house-door-fill.svg?react";
+import { ReactComponent as PlusCircleIcon } from "./plus-circle-fill.svg?react";
+import { ReactComponent as PlusLgIcon } from "./plus-lg.svg?react";
+import { ReactComponent as FoldersIcon } from "./folder-fill.svg?react";
 
 export {
+  FoldersIcon,
+  PlusLgIcon,
+  PlusCircleIcon,
+  HomeIcon,
   ErrorHexaIcon,
   AlertHexaIcon,
   MoreDotIcon,
