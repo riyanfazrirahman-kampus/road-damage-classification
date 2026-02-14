@@ -1,6 +1,74 @@
 const db = require("../config/firebase");
-const cloudinary = require("../config/cloudinary");
 const { sendToFastAPI, getModelsAvailable, getStatusModel } = require("../services/fastapi.service");
+
+async function getStatus(req, res) {
+    try {
+        const status = await getStatusModel();
+
+        return res.json(status);
+
+    } catch (error) {
+        console.error(error.message);
+
+        if (error.response) {
+            return res.status(error.response.status).json(error.response.data);
+        }
+
+        res.status(500).json({ error: "Server Models Die." });
+    }
+}
+
+
+async function getModels(req, res) {
+    try {
+        const result = await getModelsAvailable();
+
+        return res.json({
+            status: "success",
+            message: "Berhasil Mendapatkan Model Tersedia",
+            data: result,
+        });
+    } catch (error) {
+        console.error(error.message);
+
+        if (error.response) {
+            return res.status(error.response.status).json(error.response.data);
+        }
+
+        res.status(500).json({
+            status: "fail",
+            error: "Gagal mendapatakan data model yang tersedia"
+        });
+    }
+}
+
+
+async function getHistory(req, res) {
+    try {
+        const snapshot = await db
+            .collection("classifications")
+            .orderBy("created_at", "desc")
+            .limit(20)
+            .get();
+
+        const data = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        res.json({
+            status: "success",
+            data
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: "fail",
+            error: "Gagal mengambil data"
+        });
+    }
+}
 
 
 async function predictImage(req, res) {
@@ -35,6 +103,7 @@ async function predictImage(req, res) {
         });
     }
 }
+
 
 async function saveClassification(req, res) {
     try {
@@ -121,73 +190,10 @@ async function saveClassification(req, res) {
 }
 
 
-
-async function getModels(req, res) {
-    try {
-        const result = await getModelsAvailable();
-
-        return res.json({
-            status: "success",
-            message: "Berhasil Mendapatkan Model Tersedia",
-            data: result,
-        });
-    } catch (error) {
-        console.error(error.message);
-
-        if (error.response) {
-            return res.status(error.response.status).json(error.response.data);
-        }
-
-        res.status(500).json({
-            status: "fail",
-            error: "Gagal mendapatakan data model yang tersedia"
-        });
-    }
-}
-
-async function getStatus(req, res) {
-    try {
-        const status = await getStatusModel();
-
-        return res.json(status);
-
-    } catch (error) {
-        console.error(error.message);
-
-        if (error.response) {
-            return res.status(error.response.status).json(error.response.data);
-        }
-
-        res.status(500).json({ error: "Server Models Die." });
-    }
-}
-
-async function getHistory(req, res) {
-    try {
-        const snapshot = await db
-            .collection("classifications")
-            .orderBy("created_at", "desc")
-            .limit(20)
-            .get();
-
-        const data = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-
-        res.json({
-            status: "success",
-            data
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            status: "fail",
-            error: "Gagal mengambil data"
-        });
-    }
-}
-
-
-module.exports = { predictImage, saveClassification, getModels, getStatus, getHistory };
+module.exports = {
+    getStatus,
+    getModels,
+    getHistory,
+    predictImage,
+    saveClassification,
+};

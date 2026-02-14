@@ -65,7 +65,7 @@ const AppBottomMenu: React.FC = () => {
               <Link
                 key={i}
                 to={menu.path}
-                className={`flex flex-col items-center justify-center text-xs sm:text-sm transition hover:text-blue-500 active:scale-90 py-1 sm:py-2 px-1 sm:px-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${activeClass}`}
+                className={`flex flex-col items-center justify-center text-xs sm:text-sm transition hover:text-blue-500 active:scale-90 py-1 sm:py-2 px-1 sm:px-2 rounded-full ${activeClass}`}
               >
                 <span className="mb-1 text-lg sm:text-2xl transition-transform duration-200 hover:scale-110">
                   {menu.icon}

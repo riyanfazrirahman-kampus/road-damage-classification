@@ -1,20 +1,19 @@
 import io
 import json
-import numpy as np
-from typing import Dict
+from pathlib import Path
+from typing import Dict, List
 
+import numpy as np
+import tensorflow as tf
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from PIL import Image
-import tensorflow as tf
-from tensorflow.keras.preprocessing import image as tf_image
 
-
-# KONFIGURASI
+# CONFIG
 IMG_SIZE = (224, 224)
-MODELS_DIR = "models"
-
+BASE_DIR = Path(__file__).resolve().parent
+MODELS_DIR = BASE_DIR / "models"
 
 # INIT APP
 app = FastAPI(
@@ -30,25 +29,42 @@ app.add_middleware(
 )
 
 
-# STORAGE MODEL
+# MODEL STORAGE
 MODEL_STORE: Dict[str, Dict] = {}
-"""
-{
-  "mobilenet_v2": {
-      "model": keras_model,
-      "labels": ["alur", "lubang", ...]
-  }
-}
-"""
 
 
-# LOADERS
+# MODEL DISCOVERY
+def discover_models() -> List[str]:
+    if not MODELS_DIR.exists():
+        print("Folder 'models' tidak ditemukan")
+        return []
+
+    models = []
+    for folder in MODELS_DIR.iterdir():
+        if not folder.is_dir():
+            continue
+
+        model_file = folder / "model.h5"
+        labels_file = folder / "labels.json"
+
+        if model_file.exists() and labels_file.exists():
+            models.append(folder.name)
+        else:
+            print(f"Skip '{folder.name}' (file tidak lengkap)")
+
+    print(f"Models ditemukan: {models}")
+    return models
+
+
+# LOAD MODEL
 def load_model_bundle(model_name: str):
     try:
-        model = tf.keras.models.load_model(
-            f"{MODELS_DIR}/{model_name}/model.h5"
-        )
-        with open(f"{MODELS_DIR}/{model_name}/labels.json") as f:
+        model_path = MODELS_DIR / model_name / "model.h5"
+        labels_path = MODELS_DIR / model_name / "labels.json"
+
+        model = tf.keras.models.load_model(model_path)
+
+        with open(labels_path) as f:
             labels_json = json.load(f)
 
         labels = [labels_json[str(i)] for i in range(len(labels_json))]
@@ -58,49 +74,34 @@ def load_model_bundle(model_name: str):
             "labels": labels
         }
 
-        print(f"✅ Model '{model_name}' loaded")
+        print(f"Model '{model_name}' loaded")
 
     except Exception as e:
-        print(f"❌ Failed load {model_name}: {e}")
+        print(f"Failed load '{model_name}': {e}")
 
 
 @app.on_event("startup")
 def startup():
-    # Daftar model yang mau diload
-    models_to_load = [
-        "mobilenetv2_01",
-        "mobilenetv2_02",
-        "mobilenetv2_03",
-    ]
-
-    for model_name in models_to_load:
+    for model_name in discover_models():
         load_model_bundle(model_name)
 
 
-# UTIL
+# IMAGE PREPROCESS
 def preprocess_image(image_bytes: bytes) -> np.ndarray:
-    image = Image.open(io.BytesIO(image_bytes))
-
-    if image.mode != "RGB":
-        image = image.convert("RGB")
-
-    image = image.resize(IMG_SIZE)
-    img_array = tf_image.img_to_array(image) / 255.0
-
-    return np.expand_dims(img_array, axis=0)
+    img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+    img = img.resize(IMG_SIZE)
+    arr = np.array(img, dtype=np.float32) / 255.0
+    return np.expand_dims(arr, axis=0)
 
 
 # ROUTES
 @app.get("/")
 def root():
-    return {"status": "ok"}
+    return {"status": "ok."}
 
 @app.get("/models")
-def root():
-    return {
-        "available_models": list(MODEL_STORE.keys())
-    }
-
+def get_models():
+    return {"available_models": list(MODEL_STORE.keys())}
 
 @app.post("/predict")
 async def predict(
@@ -119,25 +120,22 @@ async def predict(
     if not file.content_type.startswith("image/"):
         return JSONResponse(
             status_code=400,
-            content={"error": "File bukan gambar"}
+            content={"error": "File harus gambar 🖼️"}
         )
 
     bundle = MODEL_STORE[model_name]
-    model = bundle["model"]
-    labels = bundle["labels"]
-
     image_bytes = await file.read()
-    processed_image = preprocess_image(image_bytes)
+    img = preprocess_image(image_bytes)
 
-    preds = model.predict(processed_image)[0]
-    sorted_idx = np.argsort(preds)[::-1][:3]
+    preds = bundle["model"].predict(img)[0]
+    top_idx = np.argsort(preds)[::-1][:3]
 
     results = [
         {
-            "class": labels[i],
+            "class": bundle["labels"][i],
             "confidence": round(float(preds[i]) * 100, 2)
         }
-        for i in sorted_idx
+        for i in top_idx
     ]
 
     return {

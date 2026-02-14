@@ -28,7 +28,8 @@ const tableData: Order[] = [
   {
     id: 1,
     user: {
-      image: "/images/user/user-17.jpg",
+      image:
+        "https://res.cloudinary.com/dzr9vew0j/image/upload/v1770774781/classifications/gpmqffyscwslutc7fwer.jpg",
       name: "Lindsey Curtis",
       role: "Web Designer",
     },
@@ -46,7 +47,8 @@ const tableData: Order[] = [
   {
     id: 2,
     user: {
-      image: "/images/user/user-18.jpg",
+      image:
+        "https://res.cloudinary.com/dzr9vew0j/image/upload/v1770774781/classifications/gpmqffyscwslutc7fwer.jpg",
       name: "Kaiya George",
       role: "Project Manager",
     },
@@ -60,7 +62,8 @@ const tableData: Order[] = [
   {
     id: 3,
     user: {
-      image: "/images/user/user-17.jpg",
+      image:
+        "https://res.cloudinary.com/dzr9vew0j/image/upload/v1770774781/classifications/gpmqffyscwslutc7fwer.jpg",
       name: "Zain Geidt",
       role: "Content Writing",
     },
@@ -74,7 +77,8 @@ const tableData: Order[] = [
   {
     id: 4,
     user: {
-      image: "/images/user/user-20.jpg",
+      image:
+        "https://res.cloudinary.com/dzr9vew0j/image/upload/v1770774781/classifications/gpmqffyscwslutc7fwer.jpg",
       name: "Abram Schleifer",
       role: "Digital Marketer",
     },
@@ -92,7 +96,8 @@ const tableData: Order[] = [
   {
     id: 5,
     user: {
-      image: "/images/user/user-21.jpg",
+      image:
+        "https://res.cloudinary.com/dzr9vew0j/image/upload/v1770774781/classifications/gpmqffyscwslutc7fwer.jpg",
       name: "Carla George",
       role: "Front-end Developer",
     },
@@ -202,8 +207,8 @@ export default function BasicTableOne() {
                       order.status === "Active"
                         ? "success"
                         : order.status === "Pending"
-                        ? "warning"
-                        : "error"
+                          ? "warning"
+                          : "error"
                     }
                   >
                     {order.status}
