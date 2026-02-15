@@ -1,17 +1,11 @@
-// src/pages/user/MapComponent.tsx
-import React, {
-  useEffect,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { LocationType } from "../../data/dummyLocations";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { MapLocation } from "../../utils/mapToLocations";
 
 type MapComponentProps = {
-  locations: LocationType[];
-  onLocationClick?: (location: LocationType) => void;
+  locations: MapLocation[];
+  onLocationClick?: (location: MapLocation) => void;
   height?: string;
   center?: [number, number];
   initialZoom?: number;
@@ -35,6 +29,7 @@ const MapComponent = forwardRef<any, MapComponentProps>(
     useEffect(() => {
       if (!mapRef.current) return;
 
+      // Inisialisasi peta
       mapInstanceRef.current = L.map(mapRef.current).setView(
         center,
         initialZoom,
@@ -48,31 +43,79 @@ const MapComponent = forwardRef<any, MapComponentProps>(
       return () => {
         mapInstanceRef.current?.remove();
       };
-    }, [center, initialZoom]);
+    }, []);
+
+    function getMarkerIcon(damageType: string) {
+      let color = "blue";
+
+      if (damageType === "lubang") color = "red";
+      else if (damageType === "alur") color = "orange";
+      else if (damageType === "retak") color = "green";
+      else if (damageType === "tidak_rusak") color = "blue";
+
+      return L.divIcon({
+        className: "custom-marker",
+        html: `
+          <div style="
+            background:${color};
+            width:18px;
+            height:18px;
+            border-radius:50%;
+            border:2px solid white;
+            box-shadow:0 0 4px rgba(0,0,0,0.4);
+          "></div>
+        `,
+        iconSize: [18, 18],
+        iconAnchor: [9, 9],
+      });
+    }
 
     useEffect(() => {
       if (!mapInstanceRef.current) return;
 
-      // hapus marker lama
+      // Hapus marker lama
       markersRef.current.forEach((m) => m.remove());
       markersRef.current = [];
 
       const newMarkers = locations.map((location) => {
-        const marker = L.marker(location.coordinates)
+        const marker = L.marker(location.coordinates, {
+          icon: getMarkerIcon(location.damageType),
+        })
           .addTo(mapInstanceRef.current!)
           .bindPopup(
             `
-            <div>
-              <h6>${location.name}</h6>
-              <p><strong>Jenis:</strong> ${location.damageType}</p>
-              <p><strong>Severity:</strong> ${location.severity}</p>
-              <p>${location.description}</p>
+            <div style="min-width: 150px;">
+              <div class="flex flex-col items-center mb-2">
+                <!-- Container Gambar: Persegi, Overflow Hidden, Rounded -->
+                <div class="w-20 h-20 overflow-hidden rounded-full border-2 border-white shadow-md">
+                  <!-- Gambar: object-cover agar crop rapi & pas di kotak -->
+                  <img
+                    class="w-full h-full object-cover"
+                    src="${location.image}"
+                    alt="${location.name}"
+                  />
+                </div>
+              </div>
+              <h6 class="font-bold text-center text-base m-0 mb-1">${location.damageType}</h6>
+              <p class="text-xs text-center text-gray-600 mb-1">${location.name}</p>
             </div>
           `,
-          )
-          .on("click", () => {
-            onLocationClick?.(location);
-          });
+          );
+
+        marker.on("mouseover", () => {
+          marker.openPopup();
+        });
+
+        marker.on("mouseout", () => {
+          marker.closePopup();
+        });
+
+        marker.on("click", () => {
+          if (mapInstanceRef.current) {
+            mapInstanceRef.current.panTo(location.coordinates);
+          }
+          onLocationClick?.(location);
+        });
 
         return marker;
       });
@@ -80,7 +123,7 @@ const MapComponent = forwardRef<any, MapComponentProps>(
       markersRef.current = newMarkers;
     }, [locations, onLocationClick]);
 
-    // expose function ke parent (optional)
+    // Expose function ke parent
     useImperativeHandle(ref, () => ({
       fitAllMarkers: () => {
         if (!mapInstanceRef.current || locations.length === 0) return;

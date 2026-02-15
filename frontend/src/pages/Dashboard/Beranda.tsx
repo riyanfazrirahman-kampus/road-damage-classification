@@ -1,17 +1,22 @@
 // src/pages/user/BerandaPage.tsx
 import { useRef, useState } from "react";
 import MapComponent from "../../components/maps/MapComponent";
-import { dummyLocations, LocationType } from "../../data/dummyLocations";
+import { useClassificationHistory } from "../../hooks/useClassificationHistory";
+import { MapLocation, mapToLocations } from "../../utils/mapToLocations";
 
 const BerandaPage: React.FC = () => {
-  const [selectedLocation, setSelectedLocation] = useState<LocationType | null>(
+  const [selectedLocation, setSelectedLocation] = useState<MapLocation | null>(
     null,
   );
 
+  const { data } = useClassificationHistory();
+
+  // mapping dari API → map format
+  const locations = mapToLocations(data);
+
   const mapRef = useRef<any>(null);
 
-  // Handler klik marker
-  const handleLocationClick = (location: LocationType) => {
+  const handleLocationClick = (location: MapLocation) => {
     setSelectedLocation(location);
   };
 
@@ -19,7 +24,7 @@ const BerandaPage: React.FC = () => {
     <div className="w-full h-screen relative">
       <MapComponent
         ref={mapRef}
-        locations={dummyLocations}
+        locations={locations}
         onLocationClick={handleLocationClick}
         height="100%"
       />

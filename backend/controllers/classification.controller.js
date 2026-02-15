@@ -114,7 +114,7 @@ async function saveClassification(req, res) {
             return res.status(400).json({
                 status: "fail",
                 step: "upload",
-                error: "Upload image ke Cloudinary gagal"
+                error: "Upload image ke Cloudinary gagal",
             });
         }
 
@@ -122,21 +122,48 @@ async function saveClassification(req, res) {
             return res.status(400).json({
                 status: "fail",
                 step: "validation",
-                error: "Data tidak lengkap"
+                error: "Data tidak lengkap",
             });
         }
 
+        // Parse predictions
         let parsedPredictions;
         try {
             parsedPredictions =
                 typeof predictions === "string"
                     ? JSON.parse(predictions)
                     : predictions;
-        } catch (err) {
+        } catch {
             return res.status(400).json({
                 status: "fail",
                 step: "parse_predictions",
-                error: "Format predictions harus JSON valid"
+                error: "Format predictions harus JSON valid",
+            });
+        }
+
+        // Parse location 
+        let parsedLocation = null;
+        try {
+            parsedLocation =
+                typeof location === "string" ? JSON.parse(location) : location;
+        } catch {
+            return res.status(400).json({
+                status: "fail",
+                step: "parse_location",
+                error: "Format location harus JSON valid",
+            });
+        }
+
+        // Optional validation
+        if (
+            !parsedLocation ||
+            parsedLocation.latitude == null ||
+            parsedLocation.longitude == null
+        ) {
+            return res.status(400).json({
+                status: "fail",
+                step: "validation_location",
+                error: "Latitude & Longitude wajib ada",
             });
         }
 
@@ -146,13 +173,19 @@ async function saveClassification(req, res) {
                 url: uploadResult.secure_url,
                 public_id: uploadResult.public_id,
                 bytes: uploadResult.bytes,
-                format: uploadResult.format
+                format: uploadResult.format,
             },
             model,
             predictions: parsedPredictions,
-            location,
+
+            location: {
+                latitude: parsedLocation.latitude,
+                longitude: parsedLocation.longitude,
+                address: parsedLocation.address || null,
+            },
+
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
         };
 
         let docRef;
@@ -165,18 +198,16 @@ async function saveClassification(req, res) {
                 status: "fail",
                 step: "database",
                 error: "Gagal menyimpan ke Firestore",
-                detail: dbError.message
+                detail: dbError.message,
             });
         }
 
-        // Success
         res.json({
             status: "success",
             message: "Data klasifikasi berhasil disimpan",
             id: docRef.id,
-            data: payload
+            data: payload,
         });
-
     } catch (error) {
         console.error("Unexpected error:", error);
 
@@ -184,7 +215,7 @@ async function saveClassification(req, res) {
             status: "fail",
             step: "unknown",
             error: "Terjadi kesalahan tidak terduga",
-            detail: error.message
+            detail: error.message,
         });
     }
 }
