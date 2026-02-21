@@ -1,0 +1,12 @@
+dataset
+dataset_processed/
+dataset_processed_1/
+
+# Ignore semua isi folder models
+models/*.h5
+
+models/**/*.png
+models/**/*.json
+
+!models/**/labels.json
+!models/**/model.h5
