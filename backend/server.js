@@ -17,7 +17,11 @@ app.use("/api/classification", classificationRoute);
 
 // Root endpoint
 app.get('/', (req, res) => {
-    res.send({ status: "success", message: 'Selamat Datang di API Road Damage Clasification!' });
+    res.send({
+        status: "success",
+        message: "Selamat Datang di API Road Damage Clasification!",
+        model_status: ""
+    });
 });
 
 const PORT = process.env.PORT || 5000;

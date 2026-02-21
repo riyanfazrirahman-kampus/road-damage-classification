@@ -101,7 +101,7 @@ def root():
 
 @app.get("/models")
 def get_models():
-    return {"available_models": list(MODEL_STORE.keys())}
+    return {"available_models": sorted(MODEL_STORE.keys())}
 
 @app.post("/predict")
 async def predict(
