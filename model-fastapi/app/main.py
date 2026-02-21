@@ -13,7 +13,7 @@ from PIL import Image
 # CONFIG
 IMG_SIZE = (224, 224)
 BASE_DIR = Path(__file__).resolve().parent
-MODELS_DIR = BASE_DIR / "models"
+MODELS_DIR = BASE_DIR / "../../model-classification/models"
 
 # INIT APP
 app = FastAPI(
