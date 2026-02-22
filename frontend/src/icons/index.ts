@@ -58,8 +58,10 @@ import { ReactComponent as HomeIcon } from "./house-door-fill.svg?react";
 import { ReactComponent as PlusCircleIcon } from "./plus-circle-fill.svg?react";
 import { ReactComponent as PlusLgIcon } from "./plus-lg.svg?react";
 import { ReactComponent as FoldersIcon } from "./folder-fill.svg?react";
+import { ReactComponent as GeoFillIcon } from "./geo-alt-fill.svg?react";
 
 export {
+  GeoFillIcon,
   FoldersIcon,
   PlusLgIcon,
   PlusCircleIcon,

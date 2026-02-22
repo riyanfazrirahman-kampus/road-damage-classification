@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router";
-import { FolderIcon, FoldersIcon, HomeIcon, PlusIcon } from "../icons";
+import { FoldersIcon, HomeIcon, PlusIcon } from "../icons";
 
 type MenuItem = {
   name: string;
