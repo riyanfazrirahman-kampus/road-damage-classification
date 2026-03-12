@@ -1,10 +1,10 @@
 // src/pages/user/BerandaPage.tsx
 import { useRef, useState } from "react";
-import MapComponent from "../../components/maps/MapComponent";
-import { useClassificationHistory } from "../../hooks/useClassificationHistory";
-import { MapLocation, mapToLocations } from "../../utils/mapToLocations";
+import MapComponent from "../components/maps/MapComponent";
+import { useClassificationHistory } from "../hooks/useClassificationHistory";
+import { MapLocation, mapToLocations } from "../utils/mapToLocations";
 
-const BerandaPage: React.FC = () => {
+const PageBeranda: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState<MapLocation | null>(
     null,
   );
@@ -32,4 +32,4 @@ const BerandaPage: React.FC = () => {
   );
 };
 
-export default BerandaPage;
+export default PageBeranda;

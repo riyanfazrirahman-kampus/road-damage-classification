@@ -1,10 +1,10 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import AppLayout from "./layout/AppLayout";
-import Beranda from "./pages/Dashboard/Beranda";
-import FormElements from "./pages/Forms/FormElements";
-import NotFound from "./pages/OtherPage/NotFound";
-import BasicTables from "./pages/Tables/BasicTables";
+import PageClassification from "./pages/PageClassification";
+import NotFound from "./pages/NotFound";
+import PageClassificationList from "./pages/PageClassificationList";
+import PageBeranda from "./pages/PageBeranda";
 
 export default function App() {
   return (
@@ -14,9 +14,12 @@ export default function App() {
         <Routes>
           <Route element={<AppLayout />}>
             {/* Menu */}
-            <Route index path="/" element={<Beranda />} />
-            <Route path="/classification" element={<FormElements />} />
-            <Route path="/classification-list" element={<BasicTables />} />
+            <Route index path="/" element={<PageBeranda />} />
+            <Route path="/classification" element={<PageClassification />} />
+            <Route
+              path="/classification-list"
+              element={<PageClassificationList />}
+            />
           </Route>
 
           {/* Fallback Route */}

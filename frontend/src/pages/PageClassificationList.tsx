@@ -1,9 +1,9 @@
-import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import PageMeta from "../../components/common/PageMeta";
-import PageWrapper from "../../components/common/PageWrapper";
-import BasicTableOne from "../../components/tables/BasicTables/BasicTableOne";
+import PageBreadcrumb from "../components/common/PageBreadCrumb";
+import PageMeta from "../components/common/PageMeta";
+import PageWrapper from "../components/common/PageWrapper";
+import BasicTableOne from "../components/tables/BasicTables/BasicTableOne";
 
-export default function BasicTables() {
+export default function PageClassificationList() {
   return (
     <PageWrapper>
       <PageMeta
