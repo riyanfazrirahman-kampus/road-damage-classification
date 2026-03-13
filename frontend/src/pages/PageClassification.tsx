@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import PageMeta from "../components/common/PageMeta";
 import PageWrapper from "../components/common/PageWrapper";
 import ImgDropZone from "../components/form/form-elements/ImgDropZone";
+import MapComponent from "../components/maps/MapComponent";
+import { useClassificationHistory } from "../hooks/useClassificationHistory";
+import { MapLocation, mapToLocations } from "../utils/mapToLocations";
 
 export default function PageClassification() {
+  // Img Dropzone
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
   const [formData, setFormData] = useState({
     nama_bank: "",
     url_img_bank_old: "",
@@ -24,6 +27,18 @@ export default function PageClassification() {
 
     const url = URL.createObjectURL(file);
     setPreviewUrl(url);
+  };
+
+  // Maps
+  const [selectedLocation, setSelectedLocation] = useState<MapLocation | null>(
+    null,
+  );
+  const { data } = useClassificationHistory();
+  const locations = mapToLocations(data);
+  const mapRef = useRef<any>(null);
+
+  const handleLocationClick = (location: MapLocation) => {
+    setSelectedLocation(location);
   };
 
   return (

@@ -2,7 +2,6 @@ import { useTheme } from "../../context/ThemeContext";
 
 export const ThemeToggleButton: React.FC = () => {
   const { toggleTheme } = useTheme();
-
   return (
     <button
       onClick={toggleTheme}
