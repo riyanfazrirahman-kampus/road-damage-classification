@@ -1,7 +1,7 @@
+import ClassificationList from "@/components/Classification/ClassificationList";
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import PageMeta from "../components/common/PageMeta";
 import PageWrapper from "../components/common/PageWrapper";
-import BasicTableOne from "../components/tables/BasicTables/BasicTableOne";
 
 export default function PageClassificationList() {
   return (
@@ -13,7 +13,7 @@ export default function PageClassificationList() {
       <PageBreadcrumb pageTitle="Daftar Klasifikasi" />
       <div className="grid grid-cols-1">
         <div className="space-y-6">
-          <BasicTableOne />
+          <ClassificationList />
         </div>
       </div>
     </PageWrapper>

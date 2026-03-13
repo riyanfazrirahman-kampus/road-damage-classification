@@ -1,5 +1,7 @@
 import { useState } from "react";
 import ImgDropZone from "../form/form-elements/ImgDropZone";
+import { DraggableMarker } from "./DraggableMarker";
+import Button from "../ui/button/Button";
 
 export default function FormClassification() {
   // Img Dropzone
@@ -24,12 +26,15 @@ export default function FormClassification() {
   };
 
   return (
-    <div>
-      {/* <DropzoneComponent /> */}
-      <ImgDropZone
-        onFileSelect={handleFileSelect}
-        currentImage={previewUrl || undefined}
-      />
+    <div className="grid grid-cols-1">
+      <div className="space-y-6">
+        <ImgDropZone
+          onFileSelect={handleFileSelect}
+          currentImage={previewUrl || undefined}
+        />
+        <DraggableMarker />
+        <Button className="w-full">Simpan</Button>
+      </div>
     </div>
   );
 }
