@@ -18,5 +18,9 @@ pip install -r requirements.txt
 ## Jalankan Server
 
 ```sh
+source E:/Coding/miniconda3/etc/profile.d/conda.sh && conda activate env_roadapi
+```
+
+```sh
 cd model-fastapi/app/ && uvicorn main:app --port 10000 --reload
 ```

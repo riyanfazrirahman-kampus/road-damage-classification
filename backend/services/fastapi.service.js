@@ -2,7 +2,7 @@ require("dotenv").config();
 const axios = require("axios");
 const FormData = require("form-data");
 const FASTAPI_PORT = process.env.FASTAPI_PORT
-const FASTAPI_URL = process.env.FASTAPI_URL || `http://localhost:${FASTAPI_PORT}`;
+const FASTAPI_URL = `http://localhost:${FASTAPI_PORT}` || process.env.FASTAPI_URL;
 
 
 async function getStatusModel() {
