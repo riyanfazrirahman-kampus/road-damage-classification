@@ -2,39 +2,74 @@ import { useState } from "react";
 import ImgDropZone from "../form/form-elements/ImgDropZone";
 import { DraggableMarker } from "./DraggableMarker";
 import Button from "../ui/button/Button";
+import { predictImage } from "@/api/classificationApi";
 
 export default function FormClassification() {
-  // Img Dropzone
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [formData, setFormData] = useState({
-    nama_bank: "",
-    url_img_bank_old: "",
-    aktif: 1,
-    img_bank: null as File | null,
-  });
 
-  const handleFileSelect = (file: File) => {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
+
+  const handleFileSelect = async (file: File) => {
     setSelectedFile(file);
-    setFormData((prev) => ({
-      ...prev,
-      img_bank: file,
-    }));
 
     const url = URL.createObjectURL(file);
     setPreviewUrl(url);
+
+    // langsung kirim ke backend
+    await sendImage(file);
+  };
+
+  const sendImage = async (file: File) => {
+    try {
+      setLoading(true);
+      setResult(null);
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("model_name", "jalan");
+
+      const res = await predictImage(file, "Model-RDC-1.1");
+      setResult(res.predictions);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="grid grid-cols-1">
-      <div className="space-y-6">
-        <ImgDropZone
-          onFileSelect={handleFileSelect}
-          currentImage={previewUrl || undefined}
-        />
-        <DraggableMarker />
-        <Button className="w-full">Simpan</Button>
-      </div>
+    <div className="grid grid-cols-1 gap-4">
+      <ImgDropZone
+        onFileSelect={handleFileSelect}
+        currentImage={previewUrl || undefined}
+      />
+
+      {/* Loading */}
+      {loading && (
+        <div className="p-4 rounded-xl border text-center">
+          ⏳ Memproses klasifikasi...
+        </div>
+      )}
+
+      {/* Result */}
+      {result && (
+        <div className="p-4 rounded-xl border space-y-2">
+          <h3 className="font-bold">Hasil Klasifikasi</h3>
+
+          {result.map((item: any, index: number) => (
+            <div key={index} className="flex justify-between p-2 rounded">
+              <span>{item.class}</span>
+              <span>{item.confidence} %</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <DraggableMarker />
+
+      <Button className="w-full">Simpan</Button>
     </div>
   );
 }

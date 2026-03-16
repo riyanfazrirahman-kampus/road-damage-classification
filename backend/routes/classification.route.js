@@ -7,7 +7,11 @@ router.get("/", classificationController.getStatus);
 router.get("/models", classificationController.getModels);
 router.get("/history", classificationController.getHistory);
 
-router.post("/predict", upload.single("file"), classificationController.predictImage);
+router.post("/predict",
+    upload.single("file"),
+    classificationController.predictImage
+);
+
 router.post("/save-predict",
     upload.single("file"),
     cloudinaryUpload({ folder: "classifications" }),

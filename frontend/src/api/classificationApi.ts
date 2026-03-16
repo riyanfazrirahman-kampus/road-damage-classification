@@ -29,6 +29,31 @@ export interface ClassificationData {
 }
 const BASE_URL = "http://localhost:3000/api";
 
+// Models Status
+export async function fetchStatus() {
+  const res = await fetch(`${BASE_URL}/classification`);
+
+  if (!res.ok) throw new Error("Gagal fetch history");
+
+  const json = await res.json();
+  if (json.status !== "success") return [];
+
+  return json.data;
+}
+
+// Models Tersedia
+export async function fetchModelsAvalible() {
+  const res = await fetch(`${BASE_URL}/classification/models`);
+
+  if (!res.ok) throw new Error("Gagal fetch history");
+
+  const json = await res.json();
+  if (json.status !== "success") return [];
+
+  return json.data;
+}
+
+// Get Data History
 export async function fetchClassificationHistory(): Promise<
   ClassificationData[]
 > {
@@ -39,5 +64,25 @@ export async function fetchClassificationHistory(): Promise<
   const json = await res.json();
   if (json.status !== "success") return [];
 
+  return json.data;
+}
+
+// Prediksi
+export async function predictImage(file: File, model_name: string) {
+  const formData = new FormData();
+
+  formData.append("file", file);
+  formData.append("model_name", model_name);
+
+  const res = await fetch(`${BASE_URL}/classification/predict`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error("Prediction failed");
+  }
+
+  const json = await res.json();
   return json.data;
 }
