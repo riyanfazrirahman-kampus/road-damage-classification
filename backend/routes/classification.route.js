@@ -18,4 +18,6 @@ router.post("/save-predict",
     classificationController.saveClassification
 );
 
+router.delete("/:id", classificationController.deleteClassification);
+
 module.exports = router;

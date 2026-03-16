@@ -1,4 +1,5 @@
 const db = require("../config/firebase");
+const cloudinary = require("../config/cloudinary");
 const { sendToFastAPI, getModelsAvailable, getStatusModel } = require("../services/fastapi.service");
 
 async function getStatus(req, res) {
@@ -17,7 +18,6 @@ async function getStatus(req, res) {
         res.status(500).json({ error: "Server Models Die." });
     }
 }
-
 
 async function getModels(req, res) {
     try {
@@ -220,6 +220,58 @@ async function saveClassification(req, res) {
     }
 }
 
+async function deleteClassification(req, res) {
+    try {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({
+                status: "fail",
+                error: "ID wajib ada"
+            });
+        }
+
+        const docRef = db.collection("classifications").doc(id);
+        const doc = await docRef.get();
+
+        if (!doc.exists) {
+            return res.status(404).json({
+                status: "fail",
+                error: "Data tidak ditemukan"
+            });
+        }
+
+        const data = doc.data();
+
+        // Hapus image di Cloudinary
+        if (data.image?.public_id) {
+            try {
+                await cloudinary.uploader.destroy(data.image.public_id);
+                console.log("Cloudinary delete result:", result);
+            } catch (err) {
+                console.error("Cloudinary delete error:", err.message);
+            }
+        }
+
+        // Hapus dari Firestore
+        await docRef.delete();
+
+        res.json({
+            status: "success",
+            message: "Data klasifikasi berhasil dihapus",
+            id
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            status: "fail",
+            error: "Gagal menghapus data"
+        });
+    }
+}
+
 
 module.exports = {
     getStatus,
@@ -227,4 +279,5 @@ module.exports = {
     getHistory,
     predictImage,
     saveClassification,
+    deleteClassification,
 };
