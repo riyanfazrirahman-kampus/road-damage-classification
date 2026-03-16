@@ -1,4 +1,6 @@
-require("dotenv").config();
+require("dotenv").config({
+    path: `.env.${process.env.NODE_ENV || "production"}`
+});
 const express = require("express");
 const cors = require("cors");
 
@@ -24,7 +26,7 @@ app.get('/', (req, res) => {
     });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`SERVER running on: http://localhost:${PORT}`);
 });
