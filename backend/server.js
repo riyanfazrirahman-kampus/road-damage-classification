@@ -3,11 +3,18 @@ require("dotenv").config({
 });
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
+const favicon = require("serve-favicon");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
+app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "public"));
 
 // Import routes
 const testApi = require("./routes/test.route");
@@ -19,10 +26,8 @@ app.use("/api/classification", classificationRoute);
 
 // Root endpoint
 app.get('/', (req, res) => {
-    res.send({
-        status: "success",
-        message: "Selamat Datang di API Road Damage Clasification!",
-        model_status: ""
+    res.render("index", {
+        BASE_URL: process.env.BASE_URL
     });
 });
 

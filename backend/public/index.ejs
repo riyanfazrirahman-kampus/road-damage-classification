@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Road Damage API Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/favicon.ico" />
+</head>
+
+<body class="text-blue-500 bg-slate-100 min-h-screen">
+    <div class="max-w-6xl mx-auto px-6 py-10">
+        <header class="mb-10">
+            <div
+                class="inline-flex items-center gap-2 rounded-full border border-blue-300 bg-blue-100 px-4 py-1 text-sm text-blue-600 mb-4">
+                API Documentation
+            </div>
+
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
+                Road Damage Classification API
+            </h1>
+
+            <p class="text-slate-600 text-lg max-w-3xl">
+                REST API untuk klasifikasi kerusakan jalan, melihat model yang tersedia,
+                riwayat prediksi, dan menyimpan hasil klasifikasi ke Cloudinary.
+            </p>
+        </header>
+
+        <section class="mb-10">
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden p-6 shadow-sm">
+
+                <div class="flex flex-wrap gap-2 mb-4" id="info-tabs">
+                    <button onclick="showInfoTab('base')"
+                        class="info-tab active rounded-xl px-4 py-2 bg-blue-500 text-white border border-blue-500 shadow-sm">
+                        Base URL
+                    </button>
+                    <button onclick="showInfoTab('content')"
+                        class="info-tab rounded-xl px-4 py-2 bg-slate-100 text-slate-700 border border-slate-300 hover:bg-slate-200">
+                        Content Type
+                    </button>
+                    <button onclick="showInfoTab('upload')"
+                        class="info-tab rounded-xl px-4 py-2 bg-slate-100 text-slate-700 border border-slate-300 hover:bg-slate-200">
+                        Upload Field
+                    </button>
+                </div>
+
+                <div id="tab-base" class="tab-content bg-slate-50 border border-slate-200 rounded-xl p-6">
+                    <p class="text-slate-500 text-sm mb-2">Base URL</p>
+                    <code class="text-blue-600 break-all">
+                        <a href="<%= BASE_URL %>/api/classification"
+                            target="_blank"
+                            class="hover:underline">
+                                <%= BASE_URL %>/api/classification
+                        </a>
+                    </code>
+                </div>
+
+                <div id="tab-content" class="tab-content hidden bg-slate-50 border border-slate-200 rounded-xl p-6">
+                    <p class="text-slate-500 text-sm mb-2">Content Type</p>
+                    <code class="text-blue-600">multipart/form-data</code>
+                </div>
+
+                <div id="tab-upload" class="tab-content hidden bg-slate-50 border border-slate-200 rounded-xl p-6">
+                    <p class="text-slate-500 text-sm mb-2">Upload Field</p>
+                    <code class="text-blue-600">file</code>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            function showInfoTab(tab) {
+                document.querySelectorAll('.tab-content').forEach(el => {
+                    el.classList.add('hidden');
+                });
+
+                document.querySelectorAll('.info-tab').forEach(el => {
+                    el.classList.remove('bg-blue-500', 'text-white', 'border-blue-500');
+                    el.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-300');
+                });
+
+                document.getElementById(`tab-${tab}`).classList.remove('hidden');
+
+                const activeButton = event.target;
+                activeButton.classList.remove('bg-slate-100', 'text-slate-700', 'border-slate-300');
+                activeButton.classList.add('bg-blue-500', 'text-white', 'border-blue-500');
+            }
+        </script>
+
+        <section class="space-y-6">
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                <div class="border-b border-slate-200 px-6 py-4 flex flex-wrap items-center gap-3">
+                    <span
+                        class="bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full text-sm font-medium">GET</span>
+                    <code class="text-lg">
+                        <a href="<%= BASE_URL %>/api/classification"
+                        target="_blank"
+                        class="text-blue-600 hover:underline">
+                            /api/classification
+                        </a>
+                    </code>
+                </div>
+
+                <div class="p-6">
+                    <p class="text-slate-700 mb-4">Mengecek status API dan model yang sedang aktif.</p>
+
+                    <div class="bg-slate-50 rounded-xl p-4 overflow-x-auto">
+                        <pre class="text-sm text-slate-700">{
+  "status": "ok.",
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                <div class="border-b border-slate-200 px-6 py-4 flex flex-wrap items-center gap-3">
+                    <span
+                        class="bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full text-sm font-medium">GET</span>
+                    <code class="text-lg">
+                        <a href="<%= BASE_URL %>/api/classification/models"
+                        target="_blank"
+                        class="text-blue-600 hover:underline">
+                            /api/classification/models
+                        </a>
+                    </code>
+                </div>
+
+                <div class="p-6">
+                    <p class="text-slate-700 mb-4">Menampilkan daftar model klasifikasi yang tersedia.</p>
+
+                    <div class="bg-slate-50 rounded-xl p-4 overflow-x-auto">
+                        <pre class="text-sm text-slate-700">{
+  "status": "success",
+  "message": "Berhasil Mendapatkan Model Tersedia",
+  "data": {
+    "available_models": [
+      "Model-RDC-1.1",
+      ...
+    ]
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                <div class="border-b border-slate-200 px-6 py-4 flex flex-wrap items-center gap-3">
+                    <span
+                        class="bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full text-sm font-medium">GET</span>
+                    <code class="text-lg">
+                        <a href="<%= BASE_URL %>/api/classification/history"
+                        target="_blank"
+                        class="text-blue-600 hover:underline">
+                            /api/classification/history
+                        </a>
+                    </code>
+                </div>
+
+                <div class="p-6">
+                    <p class="text-slate-700 mb-4">Mengambil riwayat hasil klasifikasi yang pernah disimpan.</p>
+
+                    <div class="bg-slate-50 rounded-xl p-4 overflow-x-auto">
+                        <pre class="text-sm text-slate-700">{
+  "status": "success",
+  "data": [
+    {
+      "id": "12",
+      "image": {
+        "url": "https://res.cloudinary.com/...",
+        "format": "jpg"
+      },
+      "model": "Model-RDC-1.1",
+      "predictions": [
+        {
+          "class": "lubang",
+          "confidence": 99.96
+        },
+        {
+          "class": "retak",
+          "confidence": 0.04
+        },
+        {
+          "class": "alur",
+          "confidence": 0
+        }
+      ] 
+},</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                <div class="border-b border-slate-200 px-6 py-4 flex flex-wrap items-center gap-3">
+                    <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm font-medium">POST</span>
+                    <code class="text-lg">/api/classification/predict</code>
+                </div>
+
+                <div class="p-6 space-y-5">
+                    <p class="text-slate-700">Upload gambar untuk diprediksi tanpa menyimpan ke database atau
+                        Cloudinary.</p>
+
+                    <div>
+                        <p class="text-sm text-slate-500 mb-2">Form Data</p>
+                        <div class="bg-slate-50 rounded-xl p-4 overflow-x-auto">
+                            <pre class="text-sm text-slate-700">file: image.jpg</pre>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-slate-500 mb-2">Contoh Response</p>
+                        <div class="bg-slate-50 rounded-xl p-4 overflow-x-auto">
+                            <pre class="text-sm text-slate-700">{
+    "status": "success",
+    "message": "klasifikasi berhasil!",
+    "data": {
+        "model": "Model-RDC-1.1",
+        "predictions": [
+            {
+                "class": "lubang",
+                "confidence": 99.51
+            },
+            {
+                "class": "retak",
+                "confidence": 0.48
+            },
+            {
+                "class": "tidak_rusak",
+                "confidence": 0
+            }
+        ]
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                <div class="border-b border-slate-200 px-6 py-4 flex flex-wrap items-center gap-3">
+                    <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm font-medium">POST</span>
+                    <code class="text-lg">/api/classification/save-predict</code>
+                </div>
+
+                <div class="p-6 space-y-5">
+                    <p class="text-slate-700">
+                        Upload gambar, lakukan prediksi, lalu simpan hasilnya beserta gambar ke Cloudinary.
+                    </p>
+
+                    <div>
+                        <p class="text-sm text-slate-500 mb-2">Form Data</p>
+                        <div class="bg-slate-50 rounded-xl p-4 overflow-x-auto">
+                            <pre class="text-sm text-slate-700">file: image.jpg</pre>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-slate-500 mb-2">Contoh Response</p>
+                        <div class="bg-slate-50 rounded-xl p-4 overflow-x-auto">
+                            <pre class="text-sm text-slate-700">{
+    "status": "success",
+    "message": "Data klasifikasi berhasil disimpan",
+    "id": "12",
+    "data": {
+        "image": {
+            "url": "https://res.cloudinary.com/...",
+            "format": "jpg"
+        },
+        "model": "mobilenetv2_01",
+        "predictions": [
+            {
+                "class": "lubang",
+                "confidence": 100
+            },
+            {
+                "class": "alur",
+                "confidence": 0
+            },
+            {
+                "class": "tidak_rusak",
+                "confidence": 0
+            }
+        ],
+        "location": {
+            "latitude": -2.229,
+            "longitude": 113.885,
+            "address": "Palangka Raya, ..."
+        },
+        "created_at": ...,
+        "updated_at": ...
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                <div class="border-b border-slate-200 px-6 py-4 flex flex-wrap items-center gap-3">
+                    <span class="bg-red-500/20 text-red-300 px-3 py-1 rounded-full text-sm font-medium">DELETE</span>
+                    <code class="text-lg">/api/classification/:id</code>
+                </div>
+
+                <div class="p-6 space-y-5">
+                    <p class="text-slate-700">Menghapus data klasifikasi berdasarkan ID.</p>
+
+                    <div>
+                        <p class="text-sm text-slate-500 mb-2">Contoh Request</p>
+                        <div class="bg-slate-50 rounded-xl p-4 overflow-x-auto">
+                            <pre class="text-sm text-slate-700">DELETE /api/classification/12</pre>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-slate-500 mb-2">Contoh Response</p>
+                        <div class="bg-slate-50 rounded-xl p-4 overflow-x-auto">
+                            <pre class="text-sm text-slate-700">{
+    "status": "success",
+    "message": "Data klasifikasi berhasil dihapus",
+    "id": "12"
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>
