@@ -97,7 +97,7 @@ def preprocess_image(image_bytes: bytes) -> np.ndarray:
 # ROUTES
 @app.get("/")
 def root():
-    return {"status": "ok."}
+    return {"status": "ok"}
 
 @app.get("/models")
 def get_models():

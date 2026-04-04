@@ -1,19 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../ui/button/Button";
 import ClassificationImage from "./ClassificationImage";
 import DraggableMarker from "./DraggableMarker";
-import { classificationImageSave } from "@/api/classificationApi";
+import { classificationImageSave, fetchStatus } from "@/api/classificationApi";
 
 export default function FormClassification() {
   const [file, setFile] = useState<File | null>(null);
   const [predictions, setPredictions] = useState<any>(null);
   const [saving, setSaving] = useState(false);
 
+  const [modelLoading, setModelLoading] = useState(true);
+  const [modelReady, setModelReady] = useState(false);
+
   const [location, setLocation] = useState({
     latitude: -2.2074064,
     longitude: 113.9152386,
     address: "",
   });
+
+  const checkModelStatus = async () => {
+    try {
+      setModelLoading(true);
+
+      const status = await fetchStatus();
+
+      setModelReady(status === "ok");
+    } catch (err) {
+      console.error(err);
+      setModelReady(false);
+    } finally {
+      setModelLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    checkModelStatus();
+  }, []);
 
   const handleSave = async () => {
     if (!file) {
@@ -31,7 +53,7 @@ export default function FormClassification() {
 
       const res = await classificationImageSave(
         file,
-        "mobilenetv2_01",
+        "Model-RDC-1.1",
         predictions,
         location,
       );
@@ -48,18 +70,39 @@ export default function FormClassification() {
 
   return (
     <div className="space-y-4 mb-15">
-      <ClassificationImage setFile={setFile} setPredictions={setPredictions} />
+      {modelLoading ? (
+        <div className="rounded-xl border border-gray-200 p-6 text-center">
+          <p className="text-sm text-gray-500">Model sedang dicek...</p>
+        </div>
+      ) : !modelReady ? (
+        <div className="rounded-xl border border-yellow-300 bg-yellow-50 p-6 text-center space-y-3">
+          <p className="text-sm text-yellow-700">
+            Model belum aktif. Klik refresh untuk mencoba lagi.
+          </p>
 
-      <DraggableMarker setLocation={setLocation} />
+          <Button onClick={checkModelStatus} size="sm">
+            Refresh
+          </Button>
+        </div>
+      ) : (
+        <>
+          <ClassificationImage
+            setFile={setFile}
+            setPredictions={setPredictions}
+          />
 
-      <Button
-        className="w-full"
-        onClick={handleSave}
-        disabled={saving}
-        size="lg"
-      >
-        {saving ? "Menyimpan..." : "Simpan"}
-      </Button>
+          <DraggableMarker setLocation={setLocation} />
+
+          <Button
+            className="w-full"
+            onClick={handleSave}
+            disabled={saving}
+            size="lg"
+          >
+            {saving ? "Menyimpan..." : "Simpan"}
+          </Button>
+        </>
+      )}
     </div>
   );
 }

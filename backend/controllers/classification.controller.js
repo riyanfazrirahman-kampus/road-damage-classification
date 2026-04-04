@@ -15,7 +15,7 @@ async function getStatus(req, res) {
             return res.status(error.response.status).json(error.response.data);
         }
 
-        res.status(500).json({ error: "Server Models Die." });
+        res.status(500).json({ status: "Server models inactive" });
     }
 }
 
