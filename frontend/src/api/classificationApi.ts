@@ -28,7 +28,7 @@ export interface ClassificationData {
   };
 }
 
-const BASE_API = import.meta.env.BASE_API;
+export const BASE_API = import.meta.env.VITE_BASE_API;
 
 // Models Status
 export async function fetchStatus() {
@@ -105,7 +105,7 @@ export async function classificationImageSave(
   formData.append("predictions", JSON.stringify(predictions));
   formData.append("location", JSON.stringify(location));
 
-  const res = await fetch(`${BASE_API}/classification/save-predict`, {
+  const res = await fetch(`${BASE_API}/api/classification/save-predict`, {
     method: "POST",
     body: formData,
   });
@@ -122,7 +122,7 @@ export async function classificationImageSave(
 
 // Delete
 export async function deleteClassification(id: string) {
-  const res = await fetch(`${BASE_API}/classification/${id}`, {
+  const res = await fetch(`${BASE_API}/api/classification/${id}`, {
     method: "DELETE",
   });
 
