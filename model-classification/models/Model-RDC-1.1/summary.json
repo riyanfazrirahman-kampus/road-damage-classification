@@ -1,0 +1,16 @@
+{
+    "model_id": 1,
+    "version": 5,
+    "model_name": "Model-RDC-1.5",
+    "model_use": "MobileNetV2",
+    "train_acc_avg": 93.03,
+    "val_acc_avg": 89.87,
+    "epochs": 30,
+    "model_path": "../models\\Model-RDC-1.5\\model.h5",
+    "test_accuracy": 90.37,
+    "test_loss": 0.219,
+    "final_conclusion": "Akurasi sangat tinggi \u2192 model sangat baik dalam mengenali mayoritas data.\nPrecision cukup \u2192 masih ada beberapa False Positive.\nRecall cukup \u2192 masih ada beberapa objek yang tidak terdeteksi.\nF1-score cukup \u2192 model lumayan stabil namun belum optimal.\nTidak ada indikasi overfitting \u2192 generalisasi model baik.\nKeseimbangan model cukup baik.",
+    "test_precision_avg": 81.58,
+    "test_recall_avg": 76.44,
+    "test_f1_avg": 78.29
+}

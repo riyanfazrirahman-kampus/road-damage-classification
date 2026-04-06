@@ -1,0 +1,13 @@
+{
+    "model_id": 4,
+    "version": 1,
+    "model_name": "Model-RDC-4.1",
+    "model_use": "MobileNetV2",
+    "train_acc_avg": 92.69,
+    "val_acc_avg": 95.42,
+    "epochs_phase1": 19,
+    "epochs_phase2": 27,
+    "model_path": "../models\\Model-RDC-4.1\\model.h5",
+    "test_accuracy": 98.62,
+    "test_loss": 0.0805
+}

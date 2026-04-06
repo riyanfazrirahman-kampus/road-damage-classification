@@ -1,0 +1,39 @@
+{
+    "alur": {
+        "precision": 0.8571428571428571,
+        "recall": 1.0,
+        "f1-score": 0.9230769230769231,
+        "support": 6.0
+    },
+    "lubang": {
+        "precision": 0.9824561403508771,
+        "recall": 1.0,
+        "f1-score": 0.9911504424778761,
+        "support": 112.0
+    },
+    "retak": {
+        "precision": 1.0,
+        "recall": 0.9777777777777777,
+        "f1-score": 0.9887640449438202,
+        "support": 90.0
+    },
+    "tidak_rusak": {
+        "precision": 1.0,
+        "recall": 0.9,
+        "f1-score": 0.9473684210526315,
+        "support": 10.0
+    },
+    "accuracy": 0.9862385321100917,
+    "macro avg": {
+        "precision": 0.9598997493734336,
+        "recall": 0.9694444444444444,
+        "f1-score": 0.9625899578878127,
+        "support": 218.0
+    },
+    "weighted avg": {
+        "precision": 0.9870547929456669,
+        "recall": 0.9862385321100917,
+        "f1-score": 0.986283299777311,
+        "support": 218.0
+    }
+}

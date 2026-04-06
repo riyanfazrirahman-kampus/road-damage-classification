@@ -1,6 +1,3 @@
-dataset
-dataset_processed/
-dataset_processed_1/
+dataset*
 
 # Ignore semua isi folder models
-models
