@@ -1,13 +1,17 @@
 {
-    "model_id": 3,
-    "version": 2,
-    "model_name": "Model-RDC-3.2",
-    "model_use": "MobileNetV2",
-    "train_acc_avg": 79.18,
-    "val_acc_avg": 93.14,
-    "epochs_phase1": 21,
-    "epochs_phase2": 8,
-    "model_path": "../models\\Model-RDC-3.2\\model.h5",
-    "test_accuracy": 93.59,
-    "test_loss": 0.185
+  "model_id": 3,
+  "version": 1,
+  "model_name": "Model-RDC-3.1",
+  "model_use": "MobileNetV2",
+  "train_acc_avg": 79.18,
+  "val_acc_avg": 93.14,
+  "epochs_phase1": 21,
+  "epochs_phase2": 8,
+  "model_path": "../models\\Model-RDC-3.1\\model.h5",
+  "test_accuracy": 93.59,
+  "test_loss": 0.185,
+  "final_conclusion": "Akurasi sangat tinggi \u2192 model sangat baik dalam mengenali mayoritas data.\nPrecision tinggi \u2192 kesalahan False Positive sangat kecil.\nRecall tinggi \u2192 model jarang melewatkan objek penting.\nF1-score sangat baik \u2192 keseimbangan Precision & Recall sangat bagus.\nTidak ada indikasi overfitting \u2192 generalisasi model baik.\nKeseimbangan model cukup baik.",
+  "test_precision_avg": 93.92,
+  "test_recall_avg": 93.51,
+  "test_f1_avg": 93.63
 }
