@@ -1,12 +1,12 @@
 {
     "model_id": 2,
-    "version": 1,
-    "model_name": "model-rdc-2.1",
+    "version": 3,
+    "model_name": "Model-RDC-2.3",
     "model_use": "MobileNetV2",
-    "train_acc_avg": 94.24,
-    "val_acc_avg": 94.84,
-    "epochs_phase1": 26,
-    "model_path": "../models\\model-rdc-2.1\\model.h5",
-    "test_accuracy": 94.5,
-    "test_loss": 0.1351
+    "train_acc_avg": 87.78,
+    "val_acc_avg": 91.09,
+    "epochs_phase1": 20,
+    "model_path": "../models\\Model-RDC-2.3\\model.h5",
+    "test_accuracy": 95.3,
+    "test_loss": 0.155
 }
